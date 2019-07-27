@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Statistics</title>
+  </head>
+  <body>
+    <div id="app">
+      <pre><code id="stats"></code></pre>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      socket.on("stats", stats => {
+        const statsEl = document.getElementById("stats");
+        statsEl.innerHTML = JSON.stringify(stats, null, 4)
+          .replace(/ /g, "&nbsp;")
+          .replace(/\n/g, "<br />");
+      });
+    </script>
+  </body>
+</html>
