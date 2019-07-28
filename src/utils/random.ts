@@ -1,8 +1,8 @@
+import { random } from "lodash/fp";
+
 /**
  * The maximum and minimum are inclusive
  */
 export const randomInt = (min: number, max: number) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return random(min, max);
 };

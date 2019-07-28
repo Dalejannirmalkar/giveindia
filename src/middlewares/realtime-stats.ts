@@ -1,3 +1,4 @@
+import ms from "ms";
 import { Request, Response, NextFunction } from "express";
 import socketio from "socket.io";
 import app from "../app";
@@ -13,7 +14,9 @@ export const realtimeStats = () => (
   sendStats(io);
 
   onHeaders(res, function() {
-    sendStats(io);
+    setTimeout(() => {
+      sendStats(io);
+    }, ms("2s"));
   });
 
   next();
