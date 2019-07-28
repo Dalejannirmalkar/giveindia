@@ -2,15 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Statistics</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism-dark.min.css"
+      integrity="sha256-U1rg+ruI6M1udMWqZDgE82Zai5JcyoPWzrf1eASdPcU="
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <div id="app">
-      <pre><code id="stats"></code></pre>
-      <button class="process" type="button">Get Process</button>
-      <pre><code id="process"></code></pre>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6 px-1 mx-0">
+            <h1>Stats</h1>
+            <pre><code id="stats" class="language-json"></code></pre>
+          </div>
+          <div class="col-md-6 px-1 mx-0">
+            <h1>
+              Process
+              <button class="process btn btn-sm btn-primary" type="button">
+                Get Process
+              </button>
+            </h1>
+
+            <pre><code id="process" class="language-json"></code></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -19,9 +49,8 @@
 
       socket.on("stats", stats => {
         const statsEl = document.getElementById("stats");
-        statsEl.innerHTML = JSON.stringify(stats, null, 4)
-          .replace(/ /g, "&nbsp;")
-          .replace(/\n/g, "<br />");
+        statsEl.innerHTML = JSON.stringify(stats, null, 4);
+        Prism.highlightElement(statsEl);
       });
     </script>
     <script>
@@ -31,20 +60,19 @@
         ev.preventDefault();
         processBtn.disabled = true;
         const originalText = processBtn.textContent;
-        processBtn.textContent = "Fetching...";
 
         let i = 0;
         const id = setInterval(() => {
-          processBtn.textContent = `Fetching ${".".repeat(
+          processBtn.textContent = `${originalText} ${".".repeat(
             (i++ % 3) + 1
           )} ${i}s`;
         }, 1000);
+
         fetch("/process")
           .then(res => res.json())
           .then(processData => {
-            processEl.innerHTML = JSON.stringify(processData, null, 4)
-              .replace(/ /g, "&nbsp;")
-              .replace(/\n/g, "<br />");
+            processEl.innerHTML = JSON.stringify(processData, null, 4);
+            Prism.highlightElement(processEl);
           })
           .finally(() => {
             processBtn.disabled = false;
@@ -53,5 +81,31 @@
           });
       });
     </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-core.min.js"
+      integrity="sha256-sSTatLHEEY8GQrdYAuhkqrYogKZ/jDlgfYaqK3ld/uQ="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-json.min.js"
+      integrity="sha256-18m89UBQcWGjPHHo64UD+sQx4SpMxiRI1F0MbefKXWw="
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
