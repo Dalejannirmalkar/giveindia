@@ -9,6 +9,8 @@
   <body>
     <div id="app">
       <pre><code id="stats"></code></pre>
+      <button class="process" type="button">Get Process</button>
+      <pre><code id="process"></code></pre>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -20,6 +22,35 @@
         statsEl.innerHTML = JSON.stringify(stats, null, 4)
           .replace(/ /g, "&nbsp;")
           .replace(/\n/g, "<br />");
+      });
+    </script>
+    <script>
+      const processEl = document.getElementById("process");
+      const processBtn = document.querySelector(".process");
+      processBtn.addEventListener("click", ev => {
+        ev.preventDefault();
+        processBtn.disabled = true;
+        const originalText = processBtn.textContent;
+        processBtn.textContent = "Fetching...";
+
+        let i = 0;
+        const id = setInterval(() => {
+          processBtn.textContent = `Fetching ${".".repeat(
+            (i++ % 3) + 1
+          )} ${i}s`;
+        }, 1000);
+        fetch("/process")
+          .then(res => res.json())
+          .then(processData => {
+            processEl.innerHTML = JSON.stringify(processData, null, 4)
+              .replace(/ /g, "&nbsp;")
+              .replace(/\n/g, "<br />");
+          })
+          .finally(() => {
+            processBtn.disabled = false;
+            processBtn.textContent = originalText;
+            clearInterval(id);
+          });
       });
     </script>
   </body>
