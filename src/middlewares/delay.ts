@@ -9,14 +9,18 @@ declare global {
   }
 }
 
-export const delay = (millis: number) => async (
+export const delay = (millis: number | Function) => async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  req.duration = millis;
+  if (typeof millis === "function") {
+    req.duration = millis();
+  } else {
+    req.duration = millis;
+  }
 
-  await pDelay(millis);
+  await pDelay(req.duration as number);
 
   next();
 };

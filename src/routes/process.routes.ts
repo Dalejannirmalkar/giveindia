@@ -1,13 +1,14 @@
+import ms from "ms";
 import { Router } from "express";
 import { randomInt } from "../utils";
 import { delay } from "../middlewares/delay";
-import * as controller from '../controllers/process.controller'
+import * as controller from "../controllers/process.controller";
 
 const processRoutes = Router();
 
 processRoutes.all(
   "/process(/*)?",
-  delay(randomInt(15, 30) * 1e3 /* ms */),
+  delay(() => ms(`${randomInt(15, 30)}s`)),
   controller.process
 );
 
