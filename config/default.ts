@@ -1,5 +1,3 @@
-export default {
-  redis: {
+require("dotenv").config();
 
-  }
-}
+export default {};
